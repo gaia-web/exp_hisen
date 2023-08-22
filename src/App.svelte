@@ -1,6 +1,7 @@
 <script lang="ts">
   import "magic-scroll";
-  import logo from "/logo_ch.png";
+  import logoImageSrc from "/logo_ch.png";
+  import reasonImageSrc from "/reason.png";
   import { attr, prop } from "./utils/attr-prop";
 
   type StyleFnArgs = {
@@ -56,6 +57,44 @@
       opacity: Math.max(0, pageScrollRatio + 1),
     };
   };
+
+  const reasonHeaderStyleFn = ({
+    pageScrollRatio,
+    canvasHeight,
+  }: StyleFnArgs) => {
+    return {
+      transform: `translateY(${
+        pageScrollRatio < -0.5
+          ? Math.max(-0.25, pageScrollRatio + 0.5) * canvasHeight
+          : 0
+      }px)`,
+      opacity: Math.max(0, pageScrollRatio + 1),
+    };
+  };
+
+  const reasonImageStyleFn = ({ pageScrollRatio }: StyleFnArgs) => {
+    return {
+      opacity: Math.max(0, pageScrollRatio + 1),
+    };
+  };
+
+  const reasonTextStyleFnGenerator =
+    (delay: number) =>
+    ({ pageScrollRatio, canvasWidth }: StyleFnArgs) => {
+      return {
+        transform: `translateX(${
+          canvasWidth -
+          Math.min(1, (pageScrollRatio + 1 - delay) * 1.5) * canvasWidth
+        }px)`,
+        opacity: Math.min(Math.max(0, pageScrollRatio + 0.5 - delay) * 5),
+      };
+    };
+
+  const reasonDetailStyleFn = ({ pageScrollRatio }: StyleFnArgs) => {
+    return {
+      opacity: Math.min(Math.max(0, pageScrollRatio + 0.35) * 5),
+    };
+  };
 </script>
 
 <main>
@@ -63,7 +102,7 @@
     <ms-item use:prop={["styleFn", logoStyleFn]}
       ><img
         alt="logo"
-        src={logo}
+        src={logoImageSrc}
         style="margin-top: 50vh; transform: translateY(-50%)"
       /></ms-item
     >
@@ -88,13 +127,57 @@
     >
     <ms-item page-index="1" use:prop={["styleFn", introLine3StyleFn]}
       ><div style="margin-top: 15rem; font-size: 3rem">
-        <a
-          href="https://web.archive.org/web/20141116160404/http://hisen.ca/index.php/contacts"
-          >联系我们</a
-        >
+        <!-- svelte-ignore a11y-invalid-attribute -->
+        <a href="#">联系我们</a>
       </div></ms-item
     >
-    <ms-item page-index="2"><h1>Something else...</h1></ms-item>
+    <ms-item page-index="2" use:prop={["styleFn", reasonHeaderStyleFn]}
+      ><div>
+        <span style="font-size: 3rem">选海盛的理由</span>
+      </div></ms-item
+    >
+    <ms-item page-index="2" use:prop={["styleFn", reasonImageStyleFn]}
+      ><div style="margin-top: 5rem">
+        <img alt="reason" src={reasonImageSrc} />
+      </div></ms-item
+    >
+    <ms-item
+      page-index="2"
+      use:prop={["styleFn", reasonTextStyleFnGenerator(0)]}
+      ><div style="margin-top: calc(5rem + 4rem * 0); margin-left: 500px">
+        <span style="font-size: 1.5rem">1. 独一无二的加拿大本土资源</span>
+      </div></ms-item
+    >
+    <ms-item
+      page-index="2"
+      use:prop={["styleFn", reasonTextStyleFnGenerator(0.05)]}
+      ><div style="margin-top: calc(5rem + 4rem * 1); margin-left: 500px">
+        <span style="font-size: 1.5rem">2. 量身定做的个性化专业服务</span>
+      </div></ms-item
+    >
+    <ms-item
+      page-index="2"
+      use:prop={["styleFn", reasonTextStyleFnGenerator(0.1)]}
+      ><div style="margin-top: calc(5rem + 4rem * 2); margin-left: 500px">
+        <span style="font-size: 1.5rem">3. 无微不至的全过程跟踪服务</span>
+      </div></ms-item
+    >
+    <ms-item
+      page-index="2"
+      use:prop={["styleFn", reasonTextStyleFnGenerator(0.15)]}
+      ><div style="margin-top: calc(5rem + 4rem * 3); margin-left: 500px">
+        <span style="font-size: 1.5rem">4. 至高无上的成功率真实保证</span>
+      </div></ms-item
+    >
+    <ms-item page-index="2" use:prop={["styleFn", reasonDetailStyleFn]}
+      ><div style="margin-top: 50vh; margin-left: 500px">
+        <div style="font-size: 3rem">
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a href="#">阅读详情</a>
+        </div>
+      </div></ms-item
+    >
+    <ms-item page-index="3"><h1>Something else...</h1></ms-item>
   </ms-container>
 </main>
 
